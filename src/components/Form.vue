@@ -39,7 +39,7 @@
           <div class="lower-part row">
               <div class="col-lg-12">
                 <form class="col-11">
-                    <div class="form">
+                    <div class="form form-custom">
                         <div class="form-group row">
                             <label for="taste" class="col-sm-6 col-form-label">Do you like milk and cookies?</label>
                             <div class="custom-switch custom-switch-label-yesno">
@@ -59,6 +59,12 @@
                                     <option>We wish you a Merry Christmas</option>
                                     <option>other</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="form-group row" v-if="isHidden">
+                            <label for="taste" class="col-sm-6 col-form-label">*If other, what is the carol's name?</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="carol-name" id="carol-name">
                             </div>
                         </div>
                         <div class="form-group form-group-custom">
@@ -109,13 +115,25 @@
                                 </div>
                             </div>
                             <div class="col-lg-6">
-                                <label class="col-sm-6 col-form-label"> Your fingerprint </label>
+                                <label class="col-sm-7 col-form-label"> Your fingerprint: 
+                                        <sup>
+                                            <i class="fas fa-info-circle fas-custom">
+                                                Hover me
+                                            </i> 
+                                        </sup>
+                                </label>
                             </div>
                         </div>
                     </div>
                 </form>
               </div>
           </div>
+      </div>
+      <!-- submit button -->
+      <div class="col-11 col-11-custom">
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn">Submit</button>
+            </div>
       </div>
       <div class="footer row row-custom">
             <div class="colour-green col-lg-6"></div>
@@ -132,8 +150,9 @@
 </template>
 
 <script>
+
 export default {
-    name: 'Form'
+    name: 'Form',
 }
 </script>
 
@@ -149,6 +168,11 @@ export default {
     margin: 0 auto;
     margin-bottom: 0.5cm;
     box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+}
+.fas-custom {
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0.3;
 }
 
 /* header styling */
@@ -170,7 +194,7 @@ export default {
 
 /* main styling */
 .main {
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 form {
     text-align: left;
@@ -199,10 +223,13 @@ form {
     width: 80%;
 }
 .form:first-child {
-    margin-top: 3rem;
+    margin-top: 2rem;
 }
 
 /* lower-part main styling */
+.form-custom {
+    margin-top: 1rem !important;
+}
 .custom-switch {
     padding-left: 15px;
 }
@@ -215,6 +242,18 @@ form {
 }
 .the-end-custom {
     margin-top: 2rem;
+    margin-bottom: 0;
+}
+.col-11-custom {
+    margin-left: 2rem;
+    position: absolute;
+    bottom: 50px;
+}
+.btn {
+    background-color: #4b7768;
+    color: #fff;
+    margin-top: 0.5rem;
+    box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.1), 0 0 0 0 rgba(10,10,10,.02);
 }
 
 
