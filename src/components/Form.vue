@@ -13,18 +13,34 @@
                         <img alt="elf-logo" src="../assets/images/elf-logo.png" class="elf-logo">
                         <h1> application </h1>
                     </div>
-                    <form class="col-12">
+                    <form class="col-12" @submit.prevent="submit">
                         <div class="form">
                             <div class="form-group row">
-                                <label for="name" class="col-sm-4 col-form-label"> Name </label>
+                                <label class="col-sm-4 col-form-label"> Name </label>
                                 <div class="col-sm-7">
-                                  <input type="text" class="form-control" name="name" id="name" required>
+                                  <input type="text" class="form-control" name="name"
+                                  autocomplete="off" 
+                                  v-model.trim="$v.name.$model"
+                                  :class="{ 'is-invalid': $v.name.$error, 'is-valid': !$v.name.$invalid }"
+                                  >
+                                  <div class="invalid-feedback d-block">
+                                    <span v-if="!$v.name.required">Field is required</span>
+                                    <span v-if="!$v.name.minLength">Name must have at least {{$v.name.$params.minLength.min}} letters.</span>
+                                  </div>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="age" class="col-sm-4 col-form-label"> Age </label>
-                                <div class="col-sm-4">
-                                  <input type="number" class="form-control" name="age" id="age" required>
+                                <label class="col-sm-4 col-form-label"> Age </label>
+                                <div class="col-sm-7">
+                                    <div class="col-sm-6 col-sm-6-custom">
+                                    <input type="number" class="form-control" name="age"
+                                    v-model.trim="$v.age.$model"
+                                    :class="{ 'is-invalid': $v.age.$error, 'is-valid': !$v.age.$invalid }"
+                                    >
+                                    </div>
+                                    <div class="invalid-feedback d-block">
+                                        <span v-if="!$v.age.between">Must be at least {{$v.age.$params.between.min}} y.o.</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -43,15 +59,15 @@
                         <div class="form-group row">
                             <label for="taste" class="col-sm-6 col-form-label">Do you like milk and cookies?</label>
                             <div class="custom-switch custom-switch-label-yesno">
-                                <input class="custom-switch-input" id="taste" type="checkbox">
+                                <input class="custom-switch-input" id="taste" type="checkbox" v-model="yes">
                                 <label class="custom-switch-btn" for="taste"></label>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="carol" class="col-sm-6 col-form-label">What's your favourite Christmas carol?</label>
                             <div class="col-sm-4">
-                                <select class="form-control" id="carol">
-                                    <option default>Choose a song</option>
+                                <select class="form-control" id="carol" v-model="carol">
+                                    <option default disabled value="">Choose a song</option>
                                     <option>Jingle bells</option>
                                     <option>Let it snow</option>
                                     <option>Rudolph the red nose reindeer</option>
@@ -61,10 +77,10 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group row" v-if="isHidden">
+                        <div class="form-group row" v-if="carol === 'other' ? isHidden === true : isHidden === false">
                             <label for="taste" class="col-sm-6 col-form-label">*If other, what is the carol's name?</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="carol-name" id="carol-name">
+                                <input type="text" class="form-control" name="carol-name" id="carol-name" v-model="other">
                             </div>
                         </div>
                         <div class="form-group form-group-custom">
@@ -72,35 +88,48 @@
                             <div class="row">
                                 <div class="form-group col-sm-4">
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="">
-                                        <label class="form-check-label" for="">Gift wrapper</label>
+                                        <input type="checkbox" class="form-check-input" value="Gift wrapper" id="gift" v-model="checkedJobs">
+                                        <label class="form-check-label" for="gift">Gift wrapper</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="">
-                                        <label class="form-check-label" for="">Toy maker</label>
+                                        <input type="checkbox" class="form-check-input" value="Toy maker" id="toy" v-model="checkedJobs">
+                                        <label class="form-check-label" for="toy">Toy maker</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="">
-                                        <label class="form-check-label" for="">Reindeer caretaker</label>
+                                        <input type="checkbox" class="form-check-input" value="Reindeer caretaker" id="caretaker" v-model="checkedJobs">
+                                        <label class="form-check-label" for="caretaker">Reindeer caretaker</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4">
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="">
-                                        <label class="form-check-label" for="">Candy maker</label>
+                                        <input type="checkbox" class="form-check-input" value="Candy maker" id="candy" v-model="checkedJobs">
+                                        <label class="form-check-label" for="candy">Candy maker</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="">
-                                        <label class="form-check-label" for="">Mail sorter</label>
+                                        <input type="checkbox" class="form-check-input" value="Mail sorter" id="mail" v-model="checkedJobs">
+                                        <label class="form-check-label" for="mail">Mail sorter</label>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="">
-                                        <label class="form-check-label" for="">Sleigh cleaner</label>
+                                        <input type="checkbox" class="form-check-input" value="Sleigh cleaner" id="cleaner" v-model="checkedJobs">
+                                        <label class="form-check-label" for="cleaner">Sleigh cleaner</label>
                                     </div>
                                 </div>
+                                <!-- different approach to handle array -->
+                                <!-- <div class="form-group col-sm-4">
+                                    <div class="form-check" v-for="job in jobList.slice(0,3)" :key="job">
+                                        <input type="checkbox" class="form-check-input" :value="job" id="gift" v-model="checkedJobs">
+                                        <label class="form-check-label" for="gift">{{job}}</label>
+                                    </div>                                    
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <div class="form-check" v-for="job in jobList.slice(3,6)" :key="job">
+                                        <input type="checkbox" class="form-check-input" :value="job" id="gift" v-model="checkedJobs">
+                                        <label class="form-check-label" for="gift">{{job}}</label>
+                                    </div>                                    
+                                </div> -->
                             </div>
                         </div>
-                        <!-- lights -->
+                        <!-- lights-decoration -->
                         <div class="d-flex justify-content-end">
                             <img alt="lights" src="../assets/images/lights.png" class="lights">
                         </div>
@@ -109,8 +138,8 @@
                             <div class="col-lg-6">
                                 <div class="form-group row">
                                     <label for="date" class="col-sm-4 col-form-label"> Date </label>
-                                    <div class="col-sm-6">
-                                        <input type="date" class="form-control" placeholder="DD.MM.YYYY" required>
+                                    <div class="col-sm-7">
+                                        <input type="date" class="form-control" placeholder="DD.MM.YYYY" v-model="date" required>
                                     </div>
                                 </div>
                             </div>
@@ -132,7 +161,7 @@
       <!-- submit button -->
       <div class="col-11 col-11-custom">
             <div class="d-flex justify-content-center">
-                <button type="submit" class="btn">Submit</button>
+                <button type="submit" class="btn" @click="submit()">Submit</button>
             </div>
       </div>
       <div class="footer row row-custom">
@@ -150,9 +179,56 @@
 </template>
 
 <script>
+import { required, minLength, between } from 'vuelidate/lib/validators'
 
 export default {
     name: 'Form',
+    data() {
+        return {
+            isHidden: true,
+            name: '',
+            age: 0,
+            yes: false,
+            carol: '',
+            other: '',
+            checkedJobs: [],
+            date: '',
+            submitStatus: null,
+            // jobList: [
+            //     'Gift wrapper',
+            //     'Toy maker',
+            //     'Reindeer caretaker',
+            //     'Candy maker',
+            //     'Mail sorter',
+            //     'Sleigh cleaner'
+            // ] // different approach to handle array
+        }
+    },
+    validations: {
+        name: {
+        required,
+            minLength: minLength(3)
+        },
+        age: {
+        required,
+            between: between(3, 100)
+        }
+    },
+    // methods: {
+    //     submit() {
+    //         console.log('submit!')
+    //         this.$v.$touch()
+    //         if (this.$v.$invalid) {
+    //             this.submitStatus = 'ERROR'
+    //         } else {
+    //             // do your submit logic here
+    //             this.submitStatus = 'PENDING'
+    //             setTimeout(() => {
+    //             this.submitStatus = 'OK'
+    //             }, 500)
+    //         }
+    //     }
+    // }
 }
 </script>
 
@@ -173,6 +249,9 @@ export default {
     font-size: 14px;
     cursor: pointer;
     opacity: 0.3;
+}
+.invalid-feedback {
+    font-size: 60%;
 }
 
 /* header styling */
@@ -208,6 +287,9 @@ form {
 .title-wrap h1 {
     margin-top: 8rem;
     text-align: right;
+}
+.col-sm-6-custom {
+    padding: 0;
 }
 .elf-logo {
     width: 60%;
