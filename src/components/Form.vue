@@ -68,7 +68,7 @@
                         </div>
                         <div class="form-group row">
                             <label for="carol" class="col-sm-6 col-form-label">What's your favourite Christmas carol?</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-5">
                                 <select class="form-control" id="carol" v-model="carol">
                                     <option default disabled value="">Choose a song</option>
                                     <option>Jingle bells</option>
@@ -143,6 +143,7 @@
                                     <label for="date" class="col-sm-4 col-form-label"> Date </label>
                                     <div class="col-sm-7">
                                         <input type="date" class="form-control" name="date" placeholder="DD.MM.YYYY"
+                                        ref="pastDate"
                                         v-model.trim="$v.date.$model"
                                         :class="{ 'is-invalid': $v.date.$error }"
                                         >
@@ -228,18 +229,16 @@ export default {
     },
     methods: {
         submit() {
-            console.log('submit!')
+            // console.log('submit!')
             this.$v.$touch()
             if (this.$v.$invalid) {
-                this.submitStatus = 'ERROR'
-            } else {
-                // do your submit logic here
-                this.submitStatus = 'PENDING'
-                setTimeout(() => {
-                this.submitStatus = 'OK'
-                }, 500)
+                this.submitStatus = 'error'
             }
         }
+    },
+    mounted() {
+        var today = new Date().toISOString().split('T')[0];
+        this.$refs.pastDate.setAttribute('min', today);
     }
 }
 </script>
