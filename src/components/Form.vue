@@ -21,11 +21,13 @@
                                   <input type="text" class="form-control" name="name"
                                   autocomplete="off" 
                                   v-model.trim="$v.name.$model"
-                                  :class="{ 'is-invalid': $v.name.$error, 'is-valid': !$v.name.$invalid }"
+                                  :class="{ 'is-invalid': $v.name.$error }"
                                   >
+                                  <!-- If you want to show css styling for 'is-valid' validation: -->
+                                  <!-- :class="{ 'is-invalid': $v.name.$error, 'is-valid': !$v.name.$invalid }" -->
                                   <div class="invalid-feedback d-block">
-                                    <span v-if="!$v.name.required">Field is required</span>
-                                    <span v-if="!$v.name.minLength">Name must have at least {{$v.name.$params.minLength.min}} letters.</span>
+                                    <span v-if="!$v.name.required && $v.name.$dirty">Field is required</span>
+                                    <span v-if="!$v.name.minLength && $v.name.$dirty">Name must have at least {{$v.name.$params.minLength.min}} letters.</span>
                                   </div>
                                 </div>
                             </div>
@@ -34,12 +36,13 @@
                                 <div class="col-sm-7">
                                     <div class="col-sm-6 col-sm-6-custom">
                                     <input type="number" class="form-control" name="age"
+                                    autocomplete="off" 
                                     v-model.trim="$v.age.$model"
-                                    :class="{ 'is-invalid': $v.age.$error, 'is-valid': !$v.age.$invalid }"
+                                    :class="{ 'is-invalid': $v.age.$error }"
                                     >
                                     </div>
                                     <div class="invalid-feedback d-block">
-                                        <span v-if="!$v.age.between">Must be at least {{$v.age.$params.between.min}} y.o.</span>
+                                        <span v-if="!$v.age.between && $v.age.$dirty">Must be at least {{$v.age.$params.between.min}} y.o.</span>
                                     </div>
                                 </div>
                             </div>
@@ -54,7 +57,7 @@
           <!-- Lower-part -->
           <div class="lower-part row">
               <div class="col-lg-12">
-                <form class="col-11">
+                <form class="col-11" @submit.prevent="submit">
                     <div class="form form-custom">
                         <div class="form-group row">
                             <label for="taste" class="col-sm-6 col-form-label">Do you like milk and cookies?</label>
@@ -139,7 +142,13 @@
                                 <div class="form-group row">
                                     <label for="date" class="col-sm-4 col-form-label"> Date </label>
                                     <div class="col-sm-7">
-                                        <input type="date" class="form-control" placeholder="DD.MM.YYYY" v-model="date" required>
+                                        <input type="date" class="form-control" name="date" placeholder="DD.MM.YYYY"
+                                        v-model.trim="$v.date.$model"
+                                        :class="{ 'is-invalid': $v.date.$error }"
+                                        >
+                                        <div class="invalid-feedback d-block">
+                                            <span v-if="!$v.date.required && $v.date.$dirty">Field is required</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -212,23 +221,26 @@ export default {
         age: {
         required,
             between: between(3, 100)
+        },
+        date: {
+        required
         }
     },
-    // methods: {
-    //     submit() {
-    //         console.log('submit!')
-    //         this.$v.$touch()
-    //         if (this.$v.$invalid) {
-    //             this.submitStatus = 'ERROR'
-    //         } else {
-    //             // do your submit logic here
-    //             this.submitStatus = 'PENDING'
-    //             setTimeout(() => {
-    //             this.submitStatus = 'OK'
-    //             }, 500)
-    //         }
-    //     }
-    // }
+    methods: {
+        submit() {
+            console.log('submit!')
+            this.$v.$touch()
+            if (this.$v.$invalid) {
+                this.submitStatus = 'ERROR'
+            } else {
+                // do your submit logic here
+                this.submitStatus = 'PENDING'
+                setTimeout(() => {
+                this.submitStatus = 'OK'
+                }, 500)
+            }
+        }
+    }
 }
 </script>
 
@@ -299,7 +311,7 @@ form {
 }
 .decoration {
     width: 85%;
-    margin: 1rem 0 1rem 4rem;
+    margin: 0 0 1rem 4rem;
 }
 .elf-image {
     width: 80%;
