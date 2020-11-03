@@ -211,12 +211,13 @@
                                 </div>
                             </div>
                             <div class="col-lg-6">
-                                <label class="col-sm-7 col-form-label"> Your fingerprint: 
-                                        <sup>
-                                            <i class="fas fa-info-circle fas-custom">
-                                                Hover me
-                                            </i> 
-                                        </sup>
+                                <label class="col-sm-7 col-form-label"> Your fingerprint:
+                                        <div class="tooltipCustom">
+                                            <sup>
+                                                <i class="fas fa-info-circle fas-custom"></i> 
+                                            </sup>
+                                            <span class="tooltiptext">Print out the application and then put your fingerprint</span>
+                                        </div> 
                                 </label>
                             </div>
                         </div>
@@ -432,6 +433,33 @@ form {
     box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.1), 0 0 0 0 rgba(10,10,10,.02);
 }
 
+/* Tooltip container */
+.tooltipCustom {
+  position: relative;
+  display: inline-block;
+}
+/* Tooltip text */
+.tooltipCustom .tooltiptext {
+  visibility: hidden;
+  width: 210px;
+  background-color: #f3e0c2;
+  opacity: 0.9;
+  color: #212520;
+  font-size: 14px;
+  text-align: center;
+  padding: 7px 14px;
+  border-radius: 6px;
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+  bottom: 110%;
+  left: 50%;
+  margin-left: -90px;
+}
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltipCustom:hover .tooltiptext {
+  visibility: visible;
+}
 
 /* footer styling */
 .footer {
