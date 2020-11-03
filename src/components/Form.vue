@@ -14,20 +14,23 @@
                         <h1> application </h1>
                     </div>
                     <form class="col-12" @submit.prevent="submit">
-                        <div class="form">
-                            <div class="form-group row">
+                        <div class="form form-custom-height">
+                            <div class="form-group row adjust-height">
                                 <label class="col-sm-4 col-form-label"> Name </label>
                                 <div class="col-sm-7" v-if="!submitStatus">
                                   <input type="text" class="form-control" name="name"
-                                  autocomplete="off" 
-                                  v-model.trim="$v.name.$model"
+                                  autocomplete="off"
+                                  v-model.trim="name"
                                   :class="{ 'is-invalid': $v.name.$error }"
                                   >
+                                  <!-- If you want a real-time update on validation, then use this version: -->
+                                  <!-- v-model.trim="$v.name.$model" -->
                                   <!-- If you want to show css styling for 'is-valid' validation: -->
                                   <!-- :class="{ 'is-invalid': $v.name.$error, 'is-valid': !$v.name.$invalid }" -->
                                   <div class="invalid-feedback d-block">
-                                    <span v-if="!$v.name.required && $v.name.$dirty">Field is required</span>
-                                    <span v-if="!$v.name.minLength && $v.name.$dirty">Name must have at least {{$v.name.$params.minLength.min}} letters.</span>
+                                    <span v-if="!$v.name.required && $v.name.$dirty && !submitStatus">Name is required</span>
+                                    <span v-if="!$v.name.minLength && $v.name.$dirty && !submitStatus">Name must have at least {{$v.name.$params.minLength.min}} letters.</span>
+                                    <span v-if="!$v.name.alpha && $v.name.$dirty && $v.name.minLength && !submitStatus">Use only alphabetic characters</span>
                                   </div>
                                 </div>
                                 <div class="col-sm-7 col-form-label" v-if="submitStatus">
@@ -39,13 +42,13 @@
                                 <div class="col-sm-7" v-if="!submitStatus">
                                     <div class="col-sm-6 col-sm-6-custom">
                                     <input type="number" class="form-control" name="age"
-                                    autocomplete="off" 
-                                    v-model.trim="$v.age.$model"
+                                    autocomplete="off"
+                                    v-model.trim="age" 
                                     :class="{ 'is-invalid': $v.age.$error }"
                                     >
                                     </div>
                                     <div class="invalid-feedback d-block">
-                                        <span v-if="!$v.age.between && $v.age.$dirty">Must be at least {{$v.age.$params.between.min}} y.o.</span>
+                                        <span v-if="!$v.age.between && $v.age.$dirty && !submitStatus">Must be at least {{$v.age.$params.between.min}} y.o.</span>
                                     </div>
                                 </div>
                                 <div class="col-sm-7 col-form-label" v-if="submitStatus">
@@ -97,8 +100,11 @@
                             <div class="col-sm-4" v-if="!submitStatus">
                                 <input type="text" class="form-control" name="carol-name" id="carol-name" 
                                 autocomplete="off"
-                                v-model="other"
+                                v-model.trim="other"
                                 >
+                                <div class="invalid-feedback d-block" v-if="!submitStatus">
+                                    <span v-if="!$v.other.maxLength && $v.other.$dirty && !submitStatus">Must not have more than {{$v.other.$params.maxLength.max}} letters.</span>
+                                </div>
                             </div>
                             <div class="col-sm-5 col-form-label" v-if="submitStatus">
                                 <strong>{{other}}</strong>
@@ -192,11 +198,11 @@
                                     <div class="col-sm-7" v-if="!submitStatus">
                                         <input type="date" class="form-control" name="date" placeholder="DD.MM.YYYY"
                                         ref="pastDate"
-                                        v-model.trim="$v.date.$model"
+                                        v-model.trim="date"
                                         :class="{ 'is-invalid': $v.date.$error }"
                                         >
                                         <div class="invalid-feedback d-block">
-                                            <span v-if="!$v.date.required && $v.date.$dirty">Field is required</span>
+                                            <span v-if="!$v.date.required && $v.date.$dirty && !submitStatus">Field is required</span>
                                         </div>
                                     </div>
                                     <div class="col-sm-7 col-form-label" v-if="submitStatus">
@@ -240,7 +246,7 @@
 </template>
 
 <script>
-import { required, minLength, between } from 'vuelidate/lib/validators';
+import { required, minLength, maxLength, alpha, between } from 'vuelidate/lib/validators';
 import moment from 'moment';
 
 export default {
@@ -275,11 +281,16 @@ export default {
     validations: {
         name: {
         required,
+        alpha,
             minLength: minLength(3)
         },
         age: {
         required,
             between: between(3, 100)
+        },
+        other: {
+        alpha,
+            maxLength: maxLength(30)
         },
         date: {
         required
@@ -326,7 +337,6 @@ export default {
 .invalid-feedback {
     font-size: 60%;
 }
-
 input[type="checkbox"][disabled]:checked ~ span {
   color: #212520;
   font-weight: bold;
@@ -384,6 +394,12 @@ form {
 }
 .form:first-child {
     margin-top: 2rem;
+}
+.form-custom-height {
+    height: 140px;
+}
+.adjust-height {
+    height: 50px;
 }
 
 /* lower-part main styling */
