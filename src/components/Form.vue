@@ -17,7 +17,7 @@
                         <div class="form">
                             <div class="form-group row">
                                 <label class="col-sm-4 col-form-label"> Name </label>
-                                <div class="col-sm-7">
+                                <div class="col-sm-7" v-if="!submitStatus">
                                   <input type="text" class="form-control" name="name"
                                   autocomplete="off" 
                                   v-model.trim="$v.name.$model"
@@ -30,10 +30,13 @@
                                     <span v-if="!$v.name.minLength && $v.name.$dirty">Name must have at least {{$v.name.$params.minLength.min}} letters.</span>
                                   </div>
                                 </div>
+                                <div class="col-sm-7 col-form-label" v-if="submitStatus">
+                                    <strong>{{name}}</strong>
+                                </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-4 col-form-label"> Age </label>
-                                <div class="col-sm-7">
+                                <div class="col-sm-7" v-if="!submitStatus">
                                     <div class="col-sm-6 col-sm-6-custom">
                                     <input type="number" class="form-control" name="age"
                                     autocomplete="off" 
@@ -44,6 +47,9 @@
                                     <div class="invalid-feedback d-block">
                                         <span v-if="!$v.age.between && $v.age.$dirty">Must be at least {{$v.age.$params.between.min}} y.o.</span>
                                     </div>
+                                </div>
+                                <div class="col-sm-7 col-form-label" v-if="submitStatus">
+                                    <strong>{{age}}</strong>
                                 </div>
                             </div>
                         </div>
@@ -61,14 +67,17 @@
                     <div class="form form-custom">
                         <div class="form-group row">
                             <label for="taste" class="col-sm-6 col-form-label">Do you like milk and cookies?</label>
-                            <div class="custom-switch custom-switch-label-yesno">
+                            <div class="custom-switch custom-switch-label-yesno" v-if="!submitStatus">
                                 <input class="custom-switch-input" id="taste" type="checkbox" v-model="yes">
                                 <label class="custom-switch-btn" for="taste"></label>
+                            </div>
+                            <div class="col-sm-4 col-form-label" v-if="submitStatus">
+                                <strong>{{yes ? "Yes" : "No"}}</strong>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="carol" class="col-sm-6 col-form-label">What's your favourite Christmas carol?</label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-5" v-if="!submitStatus">
                                 <select class="form-control" id="carol" v-model="carol">
                                     <option default disabled value="">Choose a song</option>
                                     <option>Jingle bells</option>
@@ -79,11 +88,20 @@
                                     <option>other</option>
                                 </select>
                             </div>
+                            <div class="col-sm-5 col-form-label" v-if="submitStatus">
+                                <strong>{{carol}}</strong>
+                            </div>
                         </div>
                         <div class="form-group row" v-if="carol === 'other' ? isHidden === true : isHidden === false">
                             <label for="taste" class="col-sm-6 col-form-label">*If other, what is the carol's name?</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" name="carol-name" id="carol-name" v-model="other">
+                            <div class="col-sm-4" v-if="!submitStatus">
+                                <input type="text" class="form-control" name="carol-name" id="carol-name" 
+                                autocomplete="off"
+                                v-model="other"
+                                >
+                            </div>
+                            <div class="col-sm-5 col-form-label" v-if="submitStatus">
+                                <strong>{{other}}</strong>
                             </div>
                         </div>
                         <div class="form-group form-group-custom">
@@ -91,30 +109,60 @@
                             <div class="row">
                                 <div class="form-group col-sm-4">
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" value="Gift wrapper" id="gift" v-model="checkedJobs">
-                                        <label class="form-check-label" for="gift">Gift wrapper</label>
+                                        <input type="checkbox" class="form-check-input" value="Gift wrapper" id="gift" 
+                                        v-model="checkedJobs"
+                                        :disabled="submitStatus"
+                                        >
+                                        <span>
+                                            <label class="form-check-label" for="gift">Gift wrapper</label>
+                                        </span>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" value="Toy maker" id="toy" v-model="checkedJobs">
-                                        <label class="form-check-label" for="toy">Toy maker</label>
+                                        <input type="checkbox" class="form-check-input" value="Toy maker" id="toy" 
+                                        v-model="checkedJobs"
+                                        :disabled="submitStatus"
+                                        >
+                                        <span>
+                                            <label class="form-check-label" for="toy">Toy maker</label>
+                                        </span>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" value="Reindeer caretaker" id="caretaker" v-model="checkedJobs">
-                                        <label class="form-check-label" for="caretaker">Reindeer caretaker</label>
+                                        <input type="checkbox" class="form-check-input" value="Reindeer caretaker" id="caretaker" 
+                                        v-model="checkedJobs"
+                                        :disabled="submitStatus"
+                                        >
+                                        <span>
+                                            <label class="form-check-label" for="caretaker">Reindeer caretaker</label>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4">
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" value="Candy maker" id="candy" v-model="checkedJobs">
-                                        <label class="form-check-label" for="candy">Candy maker</label>
+                                        <input type="checkbox" class="form-check-input" value="Candy maker" id="candy" 
+                                        v-model="checkedJobs"
+                                        :disabled="submitStatus"
+                                        >
+                                        <span>
+                                            <label class="form-check-label" for="candy">Candy maker</label>
+                                        </span>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" value="Mail sorter" id="mail" v-model="checkedJobs">
-                                        <label class="form-check-label" for="mail">Mail sorter</label>
+                                        <input type="checkbox" class="form-check-input" value="Mail sorter" id="mail" 
+                                        v-model="checkedJobs"
+                                        :disabled="submitStatus"
+                                        >
+                                        <span>
+                                            <label class="form-check-label" for="mail">Mail sorter</label>
+                                        </span>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" value="Sleigh cleaner" id="cleaner" v-model="checkedJobs">
-                                        <label class="form-check-label" for="cleaner">Sleigh cleaner</label>
+                                        <input type="checkbox" class="form-check-input" value="Sleigh cleaner" id="cleaner" 
+                                        v-model="checkedJobs"
+                                        :disabled="submitStatus"
+                                        >
+                                        <span>
+                                            <label class="form-check-label" for="cleaner">Sleigh cleaner</label>
+                                        </span>
                                     </div>
                                 </div>
                                 <!-- different approach to handle array -->
@@ -141,7 +189,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group row">
                                     <label for="date" class="col-sm-4 col-form-label"> Date </label>
-                                    <div class="col-sm-7">
+                                    <div class="col-sm-7" v-if="!submitStatus">
                                         <input type="date" class="form-control" name="date" placeholder="DD.MM.YYYY"
                                         ref="pastDate"
                                         v-model.trim="$v.date.$model"
@@ -150,6 +198,9 @@
                                         <div class="invalid-feedback d-block">
                                             <span v-if="!$v.date.required && $v.date.$dirty">Field is required</span>
                                         </div>
+                                    </div>
+                                    <div class="col-sm-7 col-form-label" v-if="submitStatus">
+                                        <strong>{{dateCustom}}</strong>
                                     </div>
                                 </div>
                             </div>
@@ -170,7 +221,7 @@
       </div>
       <!-- submit button -->
       <div class="col-11 col-11-custom">
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center" v-if="!submitStatus">
                 <button type="submit" class="btn" @click="submit()">Submit</button>
             </div>
       </div>
@@ -189,7 +240,8 @@
 </template>
 
 <script>
-import { required, minLength, between } from 'vuelidate/lib/validators'
+import { required, minLength, between } from 'vuelidate/lib/validators';
+import moment from 'moment';
 
 export default {
     name: 'Form',
@@ -201,8 +253,8 @@ export default {
             yes: false,
             carol: '',
             other: '',
-            checkedJobs: [],
             date: '',
+            checkedJobs: [],
             submitStatus: null,
             // jobList: [
             //     'Gift wrapper',
@@ -212,6 +264,12 @@ export default {
             //     'Mail sorter',
             //     'Sleigh cleaner'
             // ] // different approach to handle array
+        }
+    },
+    computed: {
+        dateCustom: function() {
+            var dateCustom = moment(this.date).format('MMM Do YYYY');
+            return dateCustom;
         }
     },
     validations: {
@@ -231,8 +289,12 @@ export default {
         submit() {
             // console.log('submit!')
             this.$v.$touch()
-            if (this.$v.$invalid) {
-                this.submitStatus = 'error'
+            if (!this.$v.$invalid) { //if it's valid
+                this.submitStatus = true
+                console.log("submitStatus", this.submitStatus)
+            } else {
+                this.submitStatus = false
+                console.log("submitStatus", this.submitStatus)
             }
         }
     },
@@ -263,6 +325,11 @@ export default {
 }
 .invalid-feedback {
     font-size: 60%;
+}
+
+input[type="checkbox"][disabled]:checked ~ span {
+  color: #212520;
+  font-weight: bold;
 }
 
 /* header styling */
