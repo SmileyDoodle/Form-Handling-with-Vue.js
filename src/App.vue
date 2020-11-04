@@ -1,13 +1,10 @@
 <template>
   <div id="app">
-    <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
     <Form></Form>
   </div>
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
 import Form from './components/Form.vue'
 
 
@@ -34,6 +31,11 @@ body {
 }
 
 @media screen and (max-width: 992px) {
+    body {
+      background: #fff; 
+    }
+}
+@media print {
     body {
       background: #fff; 
     }

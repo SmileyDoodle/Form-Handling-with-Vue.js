@@ -31,7 +31,8 @@
                                     <div class="invalid-feedback d-block">
                                         <span v-if="!$v.name.required && $v.name.$dirty && !submitStatus">Name is required</span>
                                         <span v-if="!$v.name.minLength && $v.name.$dirty && !submitStatus">Name must have at least {{$v.name.$params.minLength.min}} letters.</span>
-                                        <span v-if="!$v.name.alpha && $v.name.$dirty && $v.name.minLength && !submitStatus">Use only alphabetic characters</span>
+                                        <span v-if="!$v.name.maxLength && $v.name.$dirty && !submitStatus">Must not have more than {{$v.name.$params.maxLength.max}} letters.</span>
+                                        <span v-if="!$v.name.customAlpha && $v.name.$dirty && $v.name.minLength && !submitStatus">Use only alphabetic characters</span>
                                     </div>
                                     </div>
                                     <div class="col-sm-7 col-form-label" v-if="submitStatus">
@@ -112,7 +113,7 @@
                                 </div>
                             </div>
                             <div class="form-group form-group-custom">
-                                <label for="help">What can you help Santa Claus with?</label>
+                                <label for="help">Which job are you applying for?</label>
                                 <div class="row">
                                     <div class="form-group col-sm-4">
                                         <div class="form-check">
@@ -232,6 +233,10 @@
                 <div class="d-flex justify-content-center" v-if="!submitStatus">
                     <button type="submit" class="btn" @click="submit()">Submit</button>
                 </div>
+                <!-- print -->
+                <div class="print is-hidden" v-if="submitStatus">
+                    <button @click="print()" class="btn" type="button">Print</button>
+                </div>
         </div>
         <div class="footer row row-custom">
                 <div class="colour-green col-lg-6"></div>
@@ -259,7 +264,7 @@
 </template>
 
 <script>
-import { required, minLength, maxLength, alpha, between } from 'vuelidate/lib/validators';
+import { required, minLength, maxLength, helpers, between } from 'vuelidate/lib/validators';
 import moment from 'moment';
 
 export default {
@@ -294,8 +299,9 @@ export default {
     validations: {
         name: {
         required,
-        alpha,
-            minLength: minLength(3)
+        customAlpha: helpers.regex('alpha', /^[a-zA-Z0-9äöüÄÖÜ_ ]*$/),
+            minLength: minLength(3),
+            maxLength: maxLength(25)
         },
         age: {
         required,
@@ -319,6 +325,9 @@ export default {
                 this.submitStatus = false
                 console.log("submitStatus", this.submitStatus)
             }
+        },
+        print() {
+            window.print();
         }
     },
     mounted() {
@@ -442,6 +451,13 @@ form {
     color: #fff;
     margin-top: 0.5rem;
     box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.1), 0 0 0 0 rgba(10,10,10,.02);
+    opacity: 0.8;
+    transition: opacity .3s ease;
+}
+.btn:hover {
+    color: #fff;
+    opacity: 1;
+    transition: opacity .3s ease;
 }
 
 /* Tooltip container */
@@ -497,7 +513,7 @@ form {
         display: none;
     }
 }
-@media screen and (min-width : 993px) and (max-width : 1920px){
+@media screen and (min-width : 993px){
     .div-only-mobile-ipad {
         display: none;
     }
@@ -510,6 +526,9 @@ explanation   */
 @media print {
     @page {
         size: A4 !important;
+    }
+    .A4 {
+        border: 1px solid #444;
     }
     .col-lg-3 {
         -ms-flex: 0 0 25%;
