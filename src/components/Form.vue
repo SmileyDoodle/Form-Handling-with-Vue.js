@@ -216,7 +216,7 @@
                                             <sup>
                                                 <i class="fas fa-info-circle fas-custom"></i> 
                                             </sup>
-                                            <span class="tooltiptext">Print out the application and then put your fingerprint</span>
+                                            <span class="tooltiptext">Print out the application and then leave your fingerprint</span>
                                         </div> 
                                 </label>
                             </div>
@@ -290,7 +290,6 @@ export default {
             between: between(3, 100)
         },
         other: {
-        alpha,
             maxLength: maxLength(30)
         },
         date: {
@@ -470,5 +469,57 @@ form {
 }
 .footer-date {
     font-size: 10px;
+}
+
+
+
+/* printing configurations */
+@page {
+    size: auto !important;
+}
+@media print {
+    @page {
+        size: A4 !important;
+    }
+    .col-lg-3 {
+        -ms-flex: 0 0 25%;
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+    .col-lg-6 {
+        -ms-flex: 0 0 50%;
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    .col-sm-4 {
+        -ms-flex: 0 0 33.333333%;
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+    .col-sm-7 {
+        -ms-flex: 0 0 58.333333%;
+        flex: 0 0 58.333333%;
+        max-width: 58.333333%;
+    }
+    .col-sm-6 {
+        -ms-flex: 0 0 50%;
+        flex: 0 0 50%;
+        max-width: 50%;
+    } 
+    .col-lg-12 {
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .col-11 {
+        -ms-flex: 0 0 91.666667%;
+        flex: 0 0 91.666667%;
+        max-width: 91.666667%;
+    }
+    .col-sm-5 {
+        -ms-flex: 0 0 41.666667%;
+        flex: 0 0 41.666667%;
+        max-width: 41.666667%;
+    }
 }
 </style>
