@@ -32,4 +32,10 @@ body {
   margin-top: 60px;
   font-size: 18px;
 }
+
+@media screen and (max-width: 992px) {
+    body {
+      background: #fff; 
+    }
+}
 </style>
